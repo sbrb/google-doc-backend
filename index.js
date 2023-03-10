@@ -12,7 +12,7 @@ mongoose.connect(process.env.DB, {
   useCreateIndex: true,
 })
 
-const io = require("socket.io")(process.env.PORT, {
+const io = require("socket.io")(3001, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"],
