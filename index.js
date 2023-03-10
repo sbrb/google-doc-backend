@@ -11,7 +11,7 @@ mongoose.connect(process.env.DB, {
 
 const io = require("socket.io")(process.env.PORT, {
   cors: {
-    origin: "https://google-doc.netlify.app/",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 })
