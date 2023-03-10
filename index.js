@@ -1,6 +1,9 @@
+const express = require("express");
 const mongoose = require("mongoose");
 const Document = require("./Document");
 require('dotenv/config');
+var cors = require('cors');
+app.use(cors());
 
 mongoose.connect(process.env.DB, {
   useNewUrlParser: true,
@@ -11,19 +14,19 @@ mongoose.connect(process.env.DB, {
 
 const io = require("socket.io")(3001, {
   cors: {
-    origin: "https://google-doc.netlify.app",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 })
 
-const defaultValue = ""
+const defaultValue = "";
 
 io.on("connection", socket => {
   socket.on("get-document", async documentId => {
-    const document = await findOrCreateDocument(documentId)
-    socket.join(documentId)
-    socket.emit("load-document", document.data)
-
+    const document = await findOrCreateDocument(documentId);
+    socket.join(documentId);
+    socket.emit("load-document", document.data);
+    console.log(documentId)
     socket.on("send-changes", delta => {
       socket.broadcast.to(documentId).emit("receive-changes", delta)
     })
@@ -35,7 +38,9 @@ io.on("connection", socket => {
 })
 
 async function findOrCreateDocument(id) {
-  if (id == null) return
+  console.log(id)
+
+  if (id == null) return;
 
   const document = await Document.findById(id)
   if (document) return document
